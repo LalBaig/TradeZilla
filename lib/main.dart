@@ -1,7 +1,8 @@
 import 'package:trade_zilla/controllers/bottomNavController.dart';
+import 'package:trade_zilla/pages/categories_screen.dart';
 import 'package:trade_zilla/pages/create_new_pass.dart';
 import 'package:trade_zilla/pages/forgotpassword.dart';
-import 'package:trade_zilla/pages/hompage.dart';
+import 'package:trade_zilla/mainPage.dart';
 import 'package:trade_zilla/pages/otp_screen.dart';
 import 'package:trade_zilla/pages/sign_in.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +19,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final _mainscreen_controller = Get.put(MainScreenController());
+    Get.put(BottomNavigationController());
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'TradeZilla',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
             transition: Transition.cupertino),
         GetPage(
             name: '/mainpage',
-            page: () => HomeScreen(),
+            page: () => MainPage(),
             transitionDuration: Duration(milliseconds: 900),
             transition: Transition.cupertino),
         GetPage(
@@ -52,8 +53,13 @@ class MyApp extends StatelessWidget {
             page: () => CreateNewPassword(),
             transitionDuration: Duration(milliseconds: 900),
             transition: Transition.cupertino),
+        GetPage(
+            name: '/categoryscreen',
+            page: () => Category_Screen(),
+            transitionDuration: Duration(milliseconds: 900),
+            transition: Transition.cupertino),
       ],
-      initialRoute: '/createnewpassword',
+      initialRoute: '/mainpage',
     );
   }
 }
