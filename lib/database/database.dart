@@ -8,12 +8,14 @@ class database {
   database({required this.uid});
 
   Future<void> createUserProfile(
-      String name, String email, String phone, String Profession) async {
+    String name,
+    String email,
+    String phone,
+  ) async {
     return await profileInfo.doc(uid).set({
       'name': name,
       'phone': phone,
       'email': email,
-      'profession': Profession,
     });
   }
 }

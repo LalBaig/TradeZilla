@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "115039443498",
+    "project_id": "trade-zila",
+    "storage_bucket": "trade-zila.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:115039443498:android:5eecc4892c52fc4cb30153",
+        "android_client_info": {
+          "package_name": "com.example.trade_zilla"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "115039443498-r193p745mtgoocvj6khvsmlscbhc93ml.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.trade_zilla",
+            "certificate_hash": "b828783e0be8c037065de9799b7b29f2d1bfe82f"
+          }
+        },
+        {
+          "client_id": "115039443498-kgr0i34jg0k3jb91bh17tumhgkn5vka6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqTmkpmouGQy6wYCHm78Iq4zRlA3I7RVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "115039443498-kgr0i34jg0k3jb91bh17tumhgkn5vka6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

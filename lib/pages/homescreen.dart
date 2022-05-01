@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trade_zilla/utilities/colors.dart';
+import 'package:trade_zilla/widgets/bottomsheet_filtre.dart';
 import 'package:trade_zilla/widgets/product_gridview.dart';
 import 'package:trade_zilla/widgets/search_widget.dart';
 import 'package:trade_zilla/data/dummydata.dart';
@@ -16,6 +17,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String query = '';
+  void _showBottomSheet(BuildContext ctx) {
+    showModalBottomSheet(
+        backgroundColor: Colors.white,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+        isScrollControlled: true,
+        context: ctx,
+        builder: (ctx) => BottomSheetFiltre());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +39,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Flexible(
               flex: 1,
               child: IconButton(
-                  onPressed: () {}, icon: Icon(Icons.filter_list_rounded)),
+                  onPressed: () {
+                    _showBottomSheet(context);
+                  },
+                  icon: Icon(Icons.filter_list_rounded)),
             ),
           ]),
         ),
@@ -45,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 20,
           ),
           Container(
-              height: 50,
+              height: 60,
               child: ListView.builder(
                   physics: BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
@@ -60,8 +73,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Column(children: [
                         Container(
                           padding: EdgeInsets.all(10),
-                          margin: EdgeInsets.only(left: 10, right: 20),
+                          margin: EdgeInsets.only(
+                            left: 10,
+                            right: 20,
+                          ),
                           decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 2.0,
+                                    color: Colors.grey.withOpacity(.5),
+                                    offset: Offset(5, 3))
+                              ],
                               color: data[index]['color'],
                               borderRadius: BorderRadius.circular(100)),
                           child: Icon(
@@ -91,8 +113,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   physics: BouncingScrollPhysics(),
                   padding: const EdgeInsetsDirectional.all(30),
                   children: gridData
-                      .map((data) => ProductGridView(data.id, data.image,
-                          data.productName, data.exchangewith, data.address))
+                      .map((data) => ProductGridView(
+                          data.id,
+                          data.image,
+                          data.productName,
+                          data.exchangewith,
+                          data.address,
+                          data.description))
                       .toList(),
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 200,

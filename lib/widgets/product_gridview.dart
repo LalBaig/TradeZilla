@@ -1,4 +1,4 @@
-import 'package:trade_zilla/utilities/colors.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 class ProductGridView extends StatefulWidget {
@@ -7,24 +7,40 @@ class ProductGridView extends StatefulWidget {
   final String productName;
   final String exchangewith;
   final String address;
+  final String description;
 
-  ProductGridView(
-      this.id, this.image, this.productName, this.exchangewith, this.address);
+  ProductGridView(this.id, this.image, this.productName, this.exchangewith,
+      this.address, this.description);
 
   @override
   State<ProductGridView> createState() => _ProductGridViewState();
 }
 
 class _ProductGridViewState extends State<ProductGridView> {
-  void selectCategory(BuildContext ctx) {
+  void selectCategory(BuildContext ctx, String ProductName, String Description,
+      String ItemRequired, String Location, String Exchangewith) {
     print('pressed');
+    Get.toNamed('/productdetail', arguments: [
+      {'productname': ProductName},
+      {'description': Description},
+      {'itemrequired': ItemRequired},
+      {'address': Location},
+      {'exchangewith': Exchangewith},
+    ]);
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        selectCategory(context);
+        selectCategory(
+          context,
+          widget.productName,
+          widget.description,
+          widget.productName,
+          widget.address,
+          widget.exchangewith,
+        );
       },
       child: Stack(children: <Widget>[
         Container(

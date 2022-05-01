@@ -23,7 +23,7 @@ Color whtColor = Color(0xffffffff);
 Color blueColor = Color(0xff3E558C);
 Color msgBackground = Color(0xfffbfbfb);
 
-Color? organeColor = Color.fromARGB(255, 255, 161, 21);
+Color organeColor = Color.fromARGB(255, 255, 161, 21);
 
 double appBarHeight = 50;
 double authButtonHeight = 50;

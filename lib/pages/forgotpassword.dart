@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:trade_zilla/authentication/authenticate.dart';
 
 import '../utilities/colors.dart';
 
@@ -12,6 +14,18 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPasswordState extends State<ForgotPassword> {
   var emailcontroller = TextEditingController();
+  final Authenticate auth = Authenticate();
+  void showSnackBar(String title) {
+    final snackBar = SnackBar(
+      content: Text(title),
+    );
+
+    // Find the ScaffoldMessenger in the widget tree
+    // and use it to show a SnackBar.
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    // ignore: deprecated_member_use
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +100,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               GestureDetector(
                 onTap: () {
                   print("reset button clicked");
+                  auth.ResetPassword(emailcontroller.text.trim());
+                  showSnackBar(
+                      'A password reset link has been sent to ${emailcontroller.text.trim()}');
+                  Future.delayed(const Duration(seconds: 2), () {
+                    Get.offAllNamed('/beginscreen');
+                  });
                 },
                 child: Container(
                     width: MediaQuery.of(context).size.width,

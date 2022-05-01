@@ -20,7 +20,7 @@ List<Map> data = [
   {
     'color': Colors.black87,
     'icon': Icons.business,
-    'categoryTitle': "Building"
+    'categoryTitle': "Business"
   },
   {
     'color': Colors.green,
@@ -28,3 +28,12 @@ List<Map> data = [
     'categoryTitle': "Food"
   },
 ];
+
+List<String> images = [
+  'assets/images/s10_p1.jpg',
+  'assets/images/s10_p2.jpg',
+  'assets/images/s10_p3.jpg',
+  'assets/images/s10_p4.jpg'
+];
+
+String? uid;

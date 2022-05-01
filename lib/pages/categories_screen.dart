@@ -29,7 +29,7 @@ class _Category_ScreenState extends State<Category_Screen> {
                 return GestureDetector(
                   onTap: () {
                     print('pressed');
-                    Get.toNamed('/mainpage');
+                    Get.back();
                   },
                   child: Container(
                       child: Column(
@@ -43,6 +43,12 @@ class _Category_ScreenState extends State<Category_Screen> {
                                 padding: EdgeInsets.all(10),
                                 margin: EdgeInsets.only(left: 10, right: 20),
                                 decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 2.0,
+                                          color: Colors.grey.withOpacity(.5),
+                                          offset: Offset(5, 3))
+                                    ],
                                     color: data[index]['color'],
                                     borderRadius: BorderRadius.circular(100)),
                                 child: Icon(

@@ -5,11 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 class Authenticate {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  UserData? _userfromFirebase(User user) {
-    return user != null ? UserData(uid: user.uid) : null;
+  FirebaseUser? _userfromFirebase(User user) {
+    return user != null ? FirebaseUser(uid: user.uid) : null;
   }
 
-  Stream<UserData?> get user {
+  Stream<FirebaseUser?> get user {
     return _auth
         .authStateChanges()
         .map((User? user) => _userfromFirebase(user!));
@@ -27,6 +27,15 @@ class Authenticate {
     }
   }
 
+  Future ResetPassword(String email) async {
+    try {
+      _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      e.toString();
+      return null;
+    }
+  }
+
   Future Sign_Out() async {
     try {
       return await _auth.signOut();
@@ -36,14 +45,16 @@ class Authenticate {
     }
   }
 
-  Future ResisterUser(String email, String pass, String name, String phone,
-      String profession) async {
+  Future ResisterUser(
+    String email,
+    String pass,
+    String name,
+    String phone,
+  ) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: pass);
       User? user = FirebaseAuth.instance.currentUser;
-      await database(uid: user!.uid)
-          .createUserProfile(name, email, phone, profession);
       return _userfromFirebase;
     } catch (e) {
       print(e.toString());
