@@ -215,7 +215,7 @@ class _EditProfileState extends State<EditProfile> {
                               ? phone
                               : phoneController.text);
 
-                      Get.offAndToNamed('/mainpage');
+                      Get.offAllNamed('/mainpage');
                     },
                     child: Container(
                         padding: const EdgeInsets.symmetric(

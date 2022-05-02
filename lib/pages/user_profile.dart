@@ -37,21 +37,26 @@ class _UserProfileState extends State<UserProfile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    GetUserProfileImage();
     db = DatabaseHelper();
-    isloading = true;
     getData();
+    GetUserProfileImage();
+
   }
 
   void getData() async {
+    isloading = true;
+
     userid = auth.getUser();
     userdata = await db.retrieveUserData(userid);
 
-    setState(() {
+      print(userdata);
       name = userdata[0].name;
       email = userdata[0].email;
       phone = userdata[0].phone;
-    });
+    print('$name\n$email\n$phone');
+
+
+
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         isloading = false;
