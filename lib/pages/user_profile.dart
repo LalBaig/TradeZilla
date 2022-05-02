@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trade_zilla/Models/user_class.dart';
 import 'package:trade_zilla/database/database.dart';
 import 'package:trade_zilla/utilities/colors.dart';
 import 'package:trade_zilla/utilities/constants.dart';
 import 'package:trade_zilla/widgets/bardivider.dart';
 import 'package:trade_zilla/widgets/spinder.dart';
-
+import 'dart:io' as io;
 import '../authentication/authenticate.dart';
 
 class UserProfile extends StatefulWidget {
@@ -20,6 +21,8 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
+  io.File? _Image;
+
   String? userid;
   String name = '';
   String email = '';
@@ -34,6 +37,7 @@ class _UserProfileState extends State<UserProfile> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    GetUserProfileImage();
     db = DatabaseHelper();
     isloading = true;
     getData();
@@ -86,10 +90,11 @@ class _UserProfileState extends State<UserProfile> {
                       left: MediaQuery.of(context).size.width - 390),
                   child: Column(
                     children: [
-                      const CircleAvatar(
+                      CircleAvatar(
                         radius: 50,
-                        backgroundImage:
-                            AssetImage('assets/images/profile_default.jpg'),
+                        backgroundImage: _Image == null
+                            ? AssetImage('assets/images/profile_default.jpg')
+                            : Image.file(io.File(_Image!.path)).image,
                       ),
                       const SizedBox(
                         height: 8,
@@ -215,5 +220,17 @@ class _UserProfileState extends State<UserProfile> {
               ],
             ),
           );
+  }
+
+  void GetUserProfileImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? temp = prefs.getString("ProfileImage");
+    if (temp == null) {
+      return;
+    }
+
+    setState(() {
+      _Image = io.File(temp);
+    });
   }
 }

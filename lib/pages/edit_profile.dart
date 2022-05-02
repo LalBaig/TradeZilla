@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trade_zilla/Models/user_class.dart';
 import 'package:trade_zilla/database/database.dart';
 import 'package:trade_zilla/utilities/colors.dart';
-
+import 'dart:io' as io;
 import '../authentication/authenticate.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as syspath;
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -15,6 +20,8 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  io.File? _storedImage;
+
   dynamic argumentData = Get.arguments;
   late final DatabaseHelper db;
   String userid = '';
@@ -28,13 +35,13 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
+    GetUserProfileImage();
     name = argumentData[0]['name'];
     email = argumentData[1]['email'];
     phone = argumentData[2]['phone'];
     db = DatabaseHelper();
-
     userid = auth.getUser()!;
   }
 
@@ -60,8 +67,9 @@ class _EditProfileState extends State<EditProfile> {
                       horizontal: MediaQuery.of(context).size.width - 250),
                   child: CircleAvatar(
                     radius: 50,
-                    backgroundImage:
-                        AssetImage('assets/images/profile_default.jpg'),
+                    backgroundImage: _storedImage == null
+                        ? AssetImage('assets/images/profile_default.jpg')
+                        : Image.file(io.File(_storedImage!.path)).image,
                   ),
                 ),
                 Positioned(
@@ -70,7 +78,9 @@ class _EditProfileState extends State<EditProfile> {
                   child: CircleAvatar(
                     backgroundColor: organeColor,
                     child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          pickImage(ImageSource.gallery);
+                        },
                         icon: Icon(
                           Icons.edit,
                           color: whtColor,
@@ -80,7 +90,7 @@ class _EditProfileState extends State<EditProfile> {
               ],
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 30),
+              margin: const EdgeInsets.symmetric(horizontal: 30),
               child: Column(
                 children: [
                   Column(
@@ -111,7 +121,7 @@ class _EditProfileState extends State<EditProfile> {
                                 borderSide: BorderSide(color: lightGray),
                                 borderRadius: BorderRadius.circular(10)),
                             contentPadding:
-                                EdgeInsets.only(left: 10, bottom: 0)),
+                                const EdgeInsets.only(left: 10, bottom: 0)),
                         style: TextStyle(fontSize: 18, color: primaryColor),
                       ),
                     ],
@@ -148,7 +158,7 @@ class _EditProfileState extends State<EditProfile> {
                                 borderRadius: BorderRadius.circular(10)),
                             hintStyle: TextStyle(color: lightGray),
                             contentPadding:
-                                EdgeInsets.only(left: 10, bottom: 0)),
+                                const EdgeInsets.only(left: 10, bottom: 0)),
                         style: TextStyle(fontSize: 18, color: primaryColor),
                       ),
                     ],
@@ -184,26 +194,32 @@ class _EditProfileState extends State<EditProfile> {
                                 borderRadius: BorderRadius.circular(10)),
                             hintStyle: TextStyle(color: lightGray),
                             contentPadding:
-                                EdgeInsets.only(left: 10, bottom: 0)),
+                                const EdgeInsets.only(left: 10, bottom: 0)),
                         style: TextStyle(fontSize: 18, color: primaryColor),
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 35,
                   ),
                   GestureDetector(
                     onTap: () {
                       print('Save');
 
-                      db.updateUser(userid, usernameController.text,
-                          phoneController.text);
+                      db.updateUser(
+                          userid,
+                          usernameController.text == ''
+                              ? name
+                              : usernameController.text,
+                          phoneController.text == ''
+                              ? phone
+                              : phoneController.text);
 
                       Get.offAndToNamed('/mainpage');
                     },
                     child: Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 10),
                         width: MediaQuery.of(context).size.width,
                         height: 50,
                         decoration: BoxDecoration(
@@ -227,5 +243,44 @@ class _EditProfileState extends State<EditProfile> {
         ),
       ),
     );
+  }
+
+  void GetUserProfileImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? temp = prefs.getString("ProfileImage");
+    if (temp == null) {
+      return;
+    }
+
+    setState(() {
+      _storedImage = io.File(temp);
+    });
+  }
+
+  Future<void> pickImage(ImageSource source) async {
+    try {
+      final XFile? ImagePicked = await ImagePicker().pickImage(source: source);
+      if (ImagePicked == null) {
+        return;
+      }
+      final ImageConvert = io.File(ImagePicked.path);
+
+      setState(() {
+        _storedImage = ImageConvert;
+      });
+
+      final appDocumentDirectory =
+          await syspath.getApplicationDocumentsDirectory();
+      final appDocumentPath = appDocumentDirectory.path;
+
+      final ImageFile = await path.basename(ImageConvert.path);
+      final LocalSave =
+          await ImageConvert.copy("${appDocumentPath}/${ImageFile}");
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('ProfileImage', LocalSave.path.toString());
+    } on PlatformException catch (e) {
+      print("Failed to pick the image: $e");
+    }
   }
 }
