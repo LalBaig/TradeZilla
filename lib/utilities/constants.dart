@@ -36,4 +36,4 @@ List<String> images = [
   'assets/images/s10_p4.jpg'
 ];
 
-String? uid;
+String? userid;

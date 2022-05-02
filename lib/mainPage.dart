@@ -4,11 +4,14 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:trade_zilla/Models/user_class.dart';
 import 'package:trade_zilla/authentication/authenticate.dart';
 import 'package:trade_zilla/controllers/bottomNavController.dart';
+import 'package:trade_zilla/database/database.dart';
 import 'package:trade_zilla/pages/chatscreen.dart';
 import 'package:trade_zilla/pages/favourite_screen.dart';
 import 'package:trade_zilla/pages/homescreen.dart';
+import 'package:trade_zilla/pages/setting.dart';
 import 'package:trade_zilla/pages/user_profile.dart';
 import 'package:trade_zilla/utilities/colors.dart';
 import 'package:trade_zilla/utilities/constants.dart';
@@ -25,19 +28,11 @@ class _MainPageState extends State<MainPage> {
     Icons.home,
     Icons.chat,
     Icons.favorite,
-    Icons.person
+    Icons.settings
   ];
-  final Authenticate auth = Authenticate();
 
   @override
   Widget build(BuildContext context) {
-    final Authenticate _auth = Authenticate();
-
-    void initState() {
-      // TODO: implement initState
-      super.initState();
-    }
-
     return GetBuilder<BottomNavigationController>(builder: (controller) {
       return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -50,22 +45,17 @@ class _MainPageState extends State<MainPage> {
                       : controller.tabindex == 2
                           ? Text('Favourites')
                           : controller.tabindex == 3
-                              ? Text('Profile')
+                              ? Text('Settings')
                               : Text('')),
           backgroundColor: organeColor,
           actions: [
-            controller.tabindex == 0
-                ? IconButton(
-                    onPressed: () {}, icon: const Icon(Icons.notifications))
-                : controller.tabindex == 3
-                    ? IconButton(
-                        onPressed: () {
-                          print('logout');
-                          _auth.Sign_Out();
-                          Get.offAllNamed('/beginscreen');
-                        },
-                        icon: const Icon(Icons.logout))
-                    : Text('')
+            IconButton(onPressed: () {}, icon: const Icon(Icons.notifications)),
+            IconButton(
+                onPressed: () {
+                  print('user profile pressed');
+                  Get.toNamed('/userprofile');
+                },
+                icon: const Icon(Icons.account_circle))
           ],
         ),
         body: IndexedStack(
@@ -74,7 +64,7 @@ class _MainPageState extends State<MainPage> {
             HomeScreen(),
             ChatScreen(),
             FavouriteScreen(),
-            UserProfile()
+            Settings(),
           ],
         ),
         floatingActionButton: FloatingActionButton(

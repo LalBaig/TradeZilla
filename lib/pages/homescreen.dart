@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:trade_zilla/Models/user_class.dart';
+import 'package:trade_zilla/authentication/authenticate.dart';
+import 'package:trade_zilla/database/database.dart';
 import 'package:trade_zilla/utilities/colors.dart';
 import 'package:trade_zilla/widgets/bottomsheet_filtre.dart';
 import 'package:trade_zilla/widgets/product_gridview.dart';
@@ -16,6 +19,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final Authenticate auth = Authenticate();
+
   String query = '';
   void _showBottomSheet(BuildContext ctx) {
     showModalBottomSheet(

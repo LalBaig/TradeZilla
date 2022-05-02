@@ -11,6 +11,7 @@ import 'package:trade_zilla/pages/product_detail.dart';
 import 'package:trade_zilla/pages/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:trade_zilla/pages/user_profile.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,6 +78,11 @@ class MyApp extends StatelessWidget {
         GetPage(
             name: '/editprofile',
             page: () => EditProfile(),
+            transitionDuration: Duration(milliseconds: 900),
+            transition: Transition.cupertino),
+        GetPage(
+            name: '/userprofile',
+            page: () => UserProfile(),
             transitionDuration: Duration(milliseconds: 900),
             transition: Transition.cupertino),
       ],

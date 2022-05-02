@@ -15,6 +15,10 @@ class Authenticate {
         .map((User? user) => _userfromFirebase(user!));
   }
 
+  String? getUser() {
+    return user != null ? _auth.currentUser!.uid : null;
+  }
+
   Future Sign_In(String email, String pass) async {
     try {
       UserCredential result =

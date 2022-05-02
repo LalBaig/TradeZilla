@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:trade_zilla/Models/user_class.dart';
+import 'package:trade_zilla/database/database.dart';
 import 'package:trade_zilla/utilities/colors.dart';
+
+import '../authentication/authenticate.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -10,9 +15,28 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  dynamic argumentData = Get.arguments;
+  late final DatabaseHelper db;
+  String userid = '';
+
+  late String name, email, phone;
+  final Authenticate auth = Authenticate();
+
   var usernameController = TextEditingController();
   var emailController = TextEditingController();
   var phoneController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    name = argumentData[0]['name'];
+    email = argumentData[1]['email'];
+    phone = argumentData[2]['phone'];
+    db = DatabaseHelper();
+
+    userid = auth.getUser()!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +102,7 @@ class _EditProfileState extends State<EditProfile> {
                         decoration: InputDecoration(
                             fillColor: Colors.grey[250],
                             filled: true,
-                            hintText: 'Iqbal Azher',
+                            hintText: name,
                             hintStyle: TextStyle(color: lightGray),
                             enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: lightGray),
@@ -109,12 +133,13 @@ class _EditProfileState extends State<EditProfile> {
                         height: 5,
                       ),
                       TextFormField(
+                        readOnly: true,
                         controller: emailController,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                             fillColor: Colors.grey[250],
                             filled: true,
-                            hintText: "iqbal_azhar@yahoo.com",
+                            hintText: email,
                             enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: lightGray),
                                 borderRadius: BorderRadius.circular(10)),
@@ -150,7 +175,7 @@ class _EditProfileState extends State<EditProfile> {
                         decoration: InputDecoration(
                             fillColor: Colors.grey[250],
                             filled: true,
-                            hintText: "iqbal_azhar@yahoo.com",
+                            hintText: phone,
                             enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: lightGray),
                                 borderRadius: BorderRadius.circular(10)),
@@ -170,6 +195,11 @@ class _EditProfileState extends State<EditProfile> {
                   GestureDetector(
                     onTap: () {
                       print('Save');
+
+                      db.updateUser(userid, usernameController.text,
+                          phoneController.text);
+
+                      Get.offAndToNamed('/mainpage');
                     },
                     child: Container(
                         padding:

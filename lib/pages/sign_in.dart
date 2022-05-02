@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:trade_zilla/Models/user_class.dart';
 import 'package:trade_zilla/authentication/authenticate.dart';
+import 'package:trade_zilla/database/database.dart';
 import 'package:trade_zilla/utilities/colors.dart';
+import 'package:trade_zilla/utilities/constants.dart';
 import 'package:trade_zilla/widgets/spinder.dart';
 
 class AuthenticationClass extends StatefulWidget {
@@ -13,6 +17,8 @@ class AuthenticationClass extends StatefulWidget {
 }
 
 class _AuthenticationClassState extends State<AuthenticationClass> {
+  late final DatabaseHelper db;
+
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   bool login = true;
   final loginformkey = GlobalKey<FormState>();
@@ -44,6 +50,7 @@ class _AuthenticationClassState extends State<AuthenticationClass> {
   @override
   void initState() {
     super.initState();
+    db = DatabaseHelper();
   }
 
   late String countryCode;
@@ -516,8 +523,9 @@ class _AuthenticationClassState extends State<AuthenticationClass> {
                       setState(() {
                         isloading = true;
                       });
-                      FullName =
-                          firstnameController.text + lastnameController.text;
+                      FullName = firstnameController.text +
+                          " " +
+                          lastnameController.text;
 
                       dynamic result = await auth.ResisterUser(
                           emailController.text,
@@ -531,6 +539,14 @@ class _AuthenticationClassState extends State<AuthenticationClass> {
                         });
                         showSnackBar('Please Enter Different Email');
                       } else if (auth.user != null) {
+                        userid = auth.getUser();
+                        print(userid);
+                        db.insertUserData(UserData(
+                            name: FullName,
+                            email: emailController.text,
+                            phone: phoneController.text,
+                            uid: userid!));
+
                         Get.offAndToNamed('/mainpage');
                       }
                     }
