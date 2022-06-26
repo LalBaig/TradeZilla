@@ -26,9 +26,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final iconList = <IconData>[
     Icons.home,
-    Icons.chat,
     Icons.favorite,
-    Icons.settings
   ];
 
   @override
@@ -41,12 +39,8 @@ class _MainPageState extends State<MainPage> {
               child: controller.tabindex == 0
                   ? Text('TradeZila')
                   : controller.tabindex == 1
-                      ? Text('Chats')
-                      : controller.tabindex == 2
-                          ? Text('Favourites')
-                          : controller.tabindex == 3
-                              ? Text('Settings')
-                              : Text('')),
+                      ? Text('Favourites')
+                      : Text('')),
           backgroundColor: organeColor,
           actions: [
             IconButton(onPressed: () {}, icon: const Icon(Icons.notifications)),
@@ -62,15 +56,16 @@ class _MainPageState extends State<MainPage> {
           index: controller.tabindex,
           children: [
             HomeScreen(),
-            ChatScreen(),
             FavouriteScreen(),
-            Settings(),
           ],
         ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           backgroundColor: organeColor,
-          onPressed: () {},
+          onPressed: () {
+            print('Pressed!');
+            Get.toNamed('/addproduct');
+          },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: AnimatedBottomNavigationBar(

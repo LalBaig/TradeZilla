@@ -4,6 +4,29 @@ import 'package:trade_zilla/Models/user_class.dart';
 import 'package:trade_zilla/utilities/constants.dart';
 
 class DatabaseHelper {
+  static Future database() async {
+    final databasePath = await getDatabasesPath();
+
+    return openDatabase(join(databasePath, 'product.db'),
+        onCreate: (database, version) {
+      return database.execute(
+          'CREATE TABLE product(id INTEGER PRIMARY KEY, productName TEXT, description TEXT, address TEXT, imagePath TEXT)');
+    }, version: 1);
+  }
+
+  static Future insert(Map<String, Object> data) async {
+    final database = await DatabaseHelper.database();
+
+    database.insert("product", data,
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  static Future<List<Map<String, dynamic>>> getProductFromdb() async {
+    final database = await DatabaseHelper.database();
+
+    return database.query("product", orderBy: "id DESC");
+  }
+
   Future<Database> initDatabase() async {
     String path = await getDatabasesPath();
     return openDatabase(

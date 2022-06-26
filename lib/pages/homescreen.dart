@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:trade_zilla/Models/user_class.dart';
 import 'package:trade_zilla/authentication/authenticate.dart';
 import 'package:trade_zilla/database/database.dart';
+import 'package:trade_zilla/provider/youritemProvider.dart';
 import 'package:trade_zilla/utilities/colors.dart';
 import 'package:trade_zilla/widgets/bottomsheet_filtre.dart';
 import 'package:trade_zilla/widgets/product_gridview.dart';
@@ -105,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
         const Padding(
           padding: EdgeInsets.only(top: 20, left: 30),
           child: Text(
-            "Recommended",
+            "Your Items",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
         ),
@@ -114,24 +116,47 @@ class _HomeScreenState extends State<HomeScreen> {
           child: SingleChildScrollView(
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.70,
-              child: GridView(
-                  physics: BouncingScrollPhysics(),
-                  padding: const EdgeInsetsDirectional.all(30),
-                  children: gridData
-                      .map((data) => ProductGridView(
-                          data.id,
-                          data.image,
-                          data.productName,
-                          data.exchangewith,
-                          data.address,
-                          data.description))
-                      .toList(),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    mainAxisSpacing: 30,
-                    crossAxisSpacing: 30,
-                    childAspectRatio: (2 / 3),
-                  )),
+              child: FutureBuilder(
+                  future: Provider.of<Youritem>(context, listen: false)
+                      .getAllProducts(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return Consumer<Youritem>(
+                          builder: (context, productprovider, child) =>
+                              productprovider.productsItems.length <= 0
+                                  ? const Center(
+                                      child:
+                                          Text("You have not added any item"))
+                                  : GridView(
+                                      physics: BouncingScrollPhysics(),
+                                      padding:
+                                          const EdgeInsetsDirectional.all(30),
+                                      children: productprovider.productsItems
+                                          .map((data) => ProductGridView(
+                                              data.id,
+                                              data.image,
+                                              data.productName,
+                                              data.exchangewith,
+                                              data.address,
+                                              data.description))
+                                          .toList(),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                                        maxCrossAxisExtent: 200,
+                                        mainAxisSpacing: 30,
+                                        crossAxisSpacing: 30,
+                                        childAspectRatio: (2 / 3),
+                                      )),
+                        );
+                      }
+                      return Container();
+                    }
+                  }),
             ),
           ),
         ),
